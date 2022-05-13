@@ -4,28 +4,28 @@ import java.awt.Image;
 import java.io.File;
 import javax.imageio.ImageIO;
 
-public class Ammo extends MovingThing
+public class enemyAmmo extends MovingThing
 {
     private int speed;
 
-    public Ammo()
+    public enemyAmmo()
     {
         this(10,10,10,10,0);
     }
 
-    public Ammo(int x, int y)
+    public enemyAmmo(int x, int y)
     {
         //add code
         this(x, y, 10, 10, 0);
     }
 
-    public Ammo(int x, int y, int s)
+    public enemyAmmo(int x, int y, int s)
     {
         //add code
         this(x, y, 10, 10, s);
     }
 
-    public Ammo(int x, int y, int w, int h, int s)
+    public enemyAmmo(int x, int y, int w, int h, int s)
     {
         //add code here
         super(x, y, w, h);
@@ -46,19 +46,19 @@ public class Ammo extends MovingThing
 
     public void draw( Graphics window )
     {
-        //add code to draw the ammo
-        //ammo should only move up
-        window.setColor(Color.RED);
+        //add code to draw the enemyAmmo
+        //enemyAmmo should only move up
+        window.setColor(Color.BLUE);
         window.fillRect(getX(), getY(), 10, 10);
     }
 
 
     public void move( String direction )
     {
-        //add code to move the ammo
-        //ammo will be a yellow square
-        if(direction.equals("UP")){
-            setY(getY() - speed);
+        //add code to move the enemyAmmo
+        //enemyAmmo will be a yellow square
+        if(direction.equals("DOWN")){
+            setY(getY() + speed);
         }
     }
 

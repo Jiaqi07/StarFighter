@@ -8,12 +8,15 @@ import static java.lang.Character.*;
 import java.awt.image.BufferedImage;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 
 public class OuterSpace extends Canvas implements KeyListener, Runnable
 {
+    private long time;
     private background bg;
+    private AlienBullets enemyShots;
     private AlienHorde horde;
 	private Bullets shots;
     private int LEVELS;
@@ -33,6 +36,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     public OuterSpace()
     {
         setBackground(Color.black);
+        time = 0;
         STOP = false;
         LEVELS=1;
         keys = new boolean[5];
@@ -47,6 +51,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
         bg = new background();
         horde = new AlienHorde(previousSize, 1);
         shots = new Bullets();
+        enemyShots = new AlienBullets();
 
         this.addKeyListener(this);
         new Thread(this).start();
@@ -57,11 +62,16 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     public void update(Graphics window)
     {
         paint(window);
+        ++time;
     }
 
     //the top part of the paint method is done for you
     public void paint( Graphics window )
     {
+
+        if(time >= 100000){
+            time = 0;
+        }
         //set up the double buffering to make the game animation nice and smooth
         Graphics2D twoDGraph = (Graphics2D)window;
         if(STOP){ // WORK ON STOP METHOD
@@ -113,12 +123,18 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
                 keys[4] = false;
             }
             int speed = 1;
-            //ALIEN SPAWNING MECHANINCS
+            //ALIEN SPAWNING MECHANICS
             if(horde.getEm().size() == 0){
                 previousSize *= 1.20;
                 speed++;
                 ++LEVELS;
                 horde = new AlienHorde(previousSize, speed);
+            }
+
+            if(time % 1000 == 0){
+                for(int i = 0; i < horde.getEm().size(); i+=2){
+                    enemyShots.add(new enemyAmmo((horde.getEm().get(i).getX() + horde.getEm().get(i).getWidth() / 2) - 5, horde.getEm().get(i).getY() + 5, 1));
+                }
             }
 
             //COLLISION WITH BULLETS
@@ -138,7 +154,6 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
                     health.minusLives();
                     horde.getEm().remove(i--);
                     graphToBack.setColor(Color.black);
-//                    ship.flash(graphToBack);
 
                     if(health.size() <= 0){
                         horde.getEm().clear();
@@ -153,6 +168,8 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
                 horde.drawEmAll(graphToBack);
                 shots.drawEmAll(graphToBack);
                 shots.moveEmAll();
+                enemyShots.drawEmAll(graphToBack);
+                enemyShots.moveEmAll();
             }
             else{
                 endScreen.draw(graphToBack);

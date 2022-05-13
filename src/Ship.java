@@ -45,10 +45,6 @@ public class Ship extends MovingThing
         }
     }
 
-    public void flash(Graphics window) throws InterruptedException {
-        window.fillRect(getX(), getY(), getWidth(), getHeight());
-    }
-
     public void setSpeed(int s)
     {
         speed = s;
