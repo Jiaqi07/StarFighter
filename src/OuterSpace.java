@@ -25,6 +25,8 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 //	private Alien alienOne;
 //	private Alien alienTwo;
 
+    private boolean hit;
+    private PowerUp pw;
     private Lives health;
     private Ship ship;
     private boolean[] keys;
@@ -32,10 +34,14 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     private BufferedImage back;
     private int previousSize;
     private int COUNTER;
+    public boolean pickedUp;
 
     public OuterSpace()
     {
-        setBackground(Color.black);
+        pickedUp = true;
+        hit = true;
+        pw = new PowerUp();
+        setBackground(Color.lightGray);
         time = 0;
         STOP = false;
         LEVELS=1;
@@ -68,8 +74,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     //the top part of the paint method is done for you
     public void paint( Graphics window )
     {
-
-        if(time >= 100000){
+        if(time >= 10000){
             time = 0;
         }
         //set up the double buffering to make the game animation nice and smooth
@@ -131,10 +136,26 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
                 horde = new AlienHorde(previousSize, speed);
             }
 
+            if(pickedUp){
+                if(pw.getX() >= ship.getX() && pw.getX() <= ship.getX()+ship.getWidth()+50 && pw.getY() >= ship.getY() && pw.getY() <= ship.getY()+ship.getHeight()+100){
+                    System.out.println("Touch");
+                    health.addLives();
+                    pickedUp = false;
+                }
+            }
+
             if(time % 1000 == 0){
                 for(int i = 0; i < horde.getEm().size(); i+=2){
                     enemyShots.add(new enemyAmmo((horde.getEm().get(i).getX() + horde.getEm().get(i).getWidth() / 2) - 5, horde.getEm().get(i).getY() + 5, 1));
                 }
+            }
+
+            if(!pickedUp && time % 5000 == 0){
+                pickedUp = true;
+            }
+
+            if(!hit && time % 200 == 0){
+                hit = true;
             }
 
             //COLLISION WITH BULLETS
@@ -143,17 +164,35 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
                     if(horde.getEm().get(i).getX() <= shots.getList().get(j).getX() && horde.getEm().get(i).getX()+50 >= shots.getList().get(j).getX() && horde.getEm().get(i).getY() <= shots.getList().get(j).getY() && horde.getEm().get(i).getY()+50 >= shots.getList().get(j).getY()){
                         horde.getEm().remove(i--);
                         shots.getList().remove(j);
+
                         ++COUNTER;
                         break;
                     }
                 }
             }
+            //Player COLLISION WITH Enemy Bullets
+            for(int i = 0; i < enemyShots.getList().size(); ++i){
+                if(enemyShots.getList().get(i).getX() >= ship.getX() && ship.getX()+ship.getWidth() >= enemyShots.getList().get(i).getX() && enemyShots.getList().get(i).getY() >= ship.getY() && enemyShots.getList().get(i).getY() <= ship.getY()+ship.getHeight()){ //FIGURE OUT THIS THINGY
+                    health.minusLives();
+                    enemyShots.getList().remove(i--);
+                    System.out.println("Lives: " + health);
+
+                    hit = false;
+
+                    if(health.size() <= 0){
+                        horde.getEm().clear();
+                        STOP = true;
+                    }
+                }
+            }
             //ALIEN COLLISION WITH Player
             for(int i = 0; i < horde.getEm().size(); ++i){
-                if(horde.getEm().get(i).getX() <= ship.getX() && horde.getEm().get(i).getX()+ship.getWidth()+50 >= ship.getX() && horde.getEm().get(i).getY() <= ship.getY() && horde.getEm().get(i).getY()+ship.getHeight()+50 >= ship.getY()){
+                if(horde.getEm().get(i).getX() <= ship.getX() && horde.getEm().get(i).getX()+ship.getWidth()+50 >= ship.getX() && horde.getEm().get(i).getY() <= ship.getY() && horde.getEm().get(i).getY()+ship.getHeight() >= ship.getY()){
                     health.minusLives();
                     horde.getEm().remove(i--);
-                    graphToBack.setColor(Color.black);
+                    System.out.println("Lives: " + health);
+
+                    hit = false;
 
                     if(health.size() <= 0){
                         horde.getEm().clear();
@@ -164,12 +203,20 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 
             if(!STOP){ //STOP DRAWINGS AND GO TO END SCREEN CUZ YOU DEAD!!!
                 health.draw(graphToBack);
-                ship.draw(graphToBack);
+
                 horde.drawEmAll(graphToBack);
                 shots.drawEmAll(graphToBack);
                 shots.moveEmAll();
                 enemyShots.drawEmAll(graphToBack);
                 enemyShots.moveEmAll();
+
+                if(hit){
+                    ship.draw(graphToBack);
+                }
+
+                if(pickedUp){
+                    pw.draw(graphToBack);
+                }
             }
             else{
                 endScreen.draw(graphToBack);

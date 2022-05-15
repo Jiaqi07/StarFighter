@@ -27,7 +27,7 @@ public class AlienHorde
                 y += 75;
             }
             aliens.add(new Alien(x, y, 35, 35, speed));
-            x += 75*(Math.random()+.5);
+            x += 75*(Math.random()+.6);
         }
     }
 

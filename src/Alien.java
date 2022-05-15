@@ -66,7 +66,7 @@ public class Alien extends MovingThing
         //constantly change the x position of the alien by the speed
 
         if ((getX() + speed > 800 || getX() + speed < 0) && direction.equals("DOWN")) { // How to figure out WIDTH
-            setY(getY()+25);
+            setY(getY()+50);
             speed *= -1;
         }
         setX(getX() + speed);

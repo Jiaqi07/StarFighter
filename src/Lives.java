@@ -32,6 +32,10 @@ public class Lives extends MovingThing
         }
     }
 
+    public void addLives(){
+        ++amount;
+    }
+
     public void minusLives(){
         --amount;
 
@@ -46,6 +50,9 @@ public class Lives extends MovingThing
         for(int i = 0; i < amount; ++i){
             window.drawImage(image,i*40,45,30, 30,null);
         }
+    }
 
+    public String toString(){
+        return "" + amount;
     }
 }
