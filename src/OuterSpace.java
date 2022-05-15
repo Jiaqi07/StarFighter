@@ -24,7 +24,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     private EndGame endScreen;
     private boolean menu;
     private int ENEMY_BULLET_SPEED;
-
+    private String difficult;
 
 //	private Alien alienOne;
 //	private Alien alienTwo;
@@ -42,6 +42,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 
     public OuterSpace()
     {
+        difficult = "";
         menu = true;
         pickedUp = true;
         hit = true;
@@ -105,8 +106,9 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
             Font tr = new Font("TimesRoman", Font.PLAIN, 18);
             graphToBack.setFont(tr);
             graphToBack.setColor(Color.WHITE);
-            graphToBack.drawString("Level: " + LEVELS, 2, 20); //WHAT VALUES GO IN HERE
-            graphToBack.drawString("Kill Counter: " + COUNTER, 2, 40); //WHAT VALUES GO IN HERE
+            graphToBack.drawString("Level: " + LEVELS, 2, 20);
+            graphToBack.drawString("Kill Counter: " + COUNTER, 2, 40);
+            graphToBack.drawString("Difficulty: " + difficult, 600, 20);
 
 //        horde.add(alienOne);
 //        horde.add(alienTwo);
@@ -147,7 +149,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
 
             if(pickedUp){
                 if(pw.getX() >= ship.getX() && pw.getX() <= ship.getX()+ship.getWidth()+50 && pw.getY() >= ship.getY() && pw.getY() <= ship.getY()+ship.getHeight()+100){
-                    System.out.println("Touch");
+//                    System.out.println("Touch");
                     health.addLives();
                     pickedUp = false;
                 }
@@ -167,17 +169,6 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
             if(!hit && time % 200 == 0){ //"Flicker"
                 hit = true;
             }
-
-            //BULLET COLLISION WITH ENEMY BULLETS
-            for(int i = 0; i < enemyShots.getList().size(); ++i){
-                for(int j = 0; j < shots.getList().size(); ++j){
-                    if(enemyShots.getList().get(j).getX() <= shots.getList().get(j).getX() && enemyShots.getList().get(j).getX()+10 >= shots.getList().get(j).getX() && enemyShots.getList().get(j).getY() <= shots.getList().get(j).getY() && enemyShots.getList().get(j).getY()+10 >= shots.getList().get(j).getY()){
-                        enemyShots.getList().remove(i--);
-                        shots.getList().remove(j--);
-                    }
-                }
-            }
-
 
             //COLLISION WITH BULLETS
             for(int i = 0; i < horde.getEm().size(); ++i){
@@ -277,18 +268,21 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
             previousSize = 5;
             health.setLives(3);
             ENEMY_BULLET_SPEED = 1;
+            difficult = "Easy";
         }
         if(e.getKeyCode() == KeyEvent.VK_2 && menu){
             menu = false;
             previousSize = 10;
             health.setLives(2);
             ENEMY_BULLET_SPEED = 2;
+            difficult = "Medium";
         }
         if(e.getKeyCode() == KeyEvent.VK_3 && menu){
             menu = false;
             previousSize = 20;
             health.setLives(1);
             ENEMY_BULLET_SPEED = 3;
+            difficult = "Hard";
         }
         repaint();
     }
