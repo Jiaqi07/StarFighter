@@ -56,17 +56,7 @@ public class AlienHorde
             group.move("DOWN");
         }
     }
-    /*
-       public void removeDeadOnes(List<Ammo> shots)
-        {
-          //Part 3
-          //for every shot in the list
-          //check if you've hit any alien in the list
-          //(do the coordinates of the shot fall between the boundarises of the alien)
-          //if they do then remove the alien and the shot
-          //make sure you break out of the loop if this happens
-        }
-    */
+
     public String toString()
     {
         return "" + aliens;

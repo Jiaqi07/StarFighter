@@ -36,6 +36,10 @@ public class Lives extends MovingThing
         ++amount;
     }
 
+    public void setLives(int x){
+        amount = x;
+    }
+
     public void minusLives(){
         --amount;
 
