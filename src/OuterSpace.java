@@ -48,7 +48,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
     public OuterSpace()
     {
         JoseHealth = 100;
-        Jose = new Boss(100, -300, 1000, 1000, 0);
+        Jose = new Boss(100, -400, 1000, 1000, 0);
         BOSS_PHASE = false;
         difficult = "";
         menu = true;
@@ -116,8 +116,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
             graphToBack.setColor(Color.WHITE);
             graphToBack.drawString("Level: " + LEVELS, 2, 20);
             graphToBack.drawString("Kill Counter: " + COUNTER, 2, 40);
-            graphToBack.drawString("Difficulty: " + difficult, 600, 20);
-
+            graphToBack.drawString("Difficulty: " + difficult, 630, 20);
 
 //        horde.add(alienOne);
 //        horde.add(alienTwo);
@@ -331,7 +330,7 @@ public class OuterSpace extends Canvas implements KeyListener, Runnable
         }
         if(e.getKeyCode() == KeyEvent.VK_3 && menu){
             menu = false;
-            previousSize = 20;
+            previousSize = 15;
             health.setLives(1);
             ENEMY_BULLET_SPEED = 3;
             difficult = "Hard";
